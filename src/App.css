@@ -1,0 +1,13 @@
+
+.scrollbar-hidden::-webkit-scrollbar {
+  width: 0px;  
+  background: transparent;
+}
+
+.scrollbar-hidden {
+  scrollbar-width: none; 
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none; 
+}
