@@ -5,7 +5,7 @@ import Filters from './components/Filter';
 import IntensityPieChart from './components/IntensityPieChart';
 import Statistics from './components/Statistics';
 import DonutChart from './components/DonutChart';
-
+import LikelihoodBarChart from './components/LikelihoodBarChart';
 import './App.css'
 
 function App() {
@@ -94,6 +94,10 @@ function App() {
                   <h2 className="text-lg font-semibold mb-2">Bar Chart</h2>
                   <Statistics sectors={totalSectors} countries={totalCountries} topics={totalTopics} />
               </div>
+              <div className="bg-gray-900 p-4 shadow-md rounded-md">
+                <h2 className="text-lg font-semibold mb-2"></h2>
+                <LikelihoodBarChart data={filteredData} />
+            </div>
         </div>
     </div>
 </div>
