@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios'; 
-import BarChart from './components/Barchart';   
+import BarChart from './components/BarChart';   
 import Filters from './components/Filter';     
 import IntensityPieChart from './components/IntensityPieChart';
 import Statistics from './components/Statistics';
@@ -38,7 +38,7 @@ function App() {
     const applyFilters = () => {
         let filtered = [...allData];
 
-        // Apply all filters
+      
         Object.keys(filters).forEach(key => {
             if (filters[key]) {
                 filtered = filtered.filter(item => item[key] === filters[key]);

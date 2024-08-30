@@ -48,7 +48,6 @@ const Statistics = ({ sectors, countries, topics }) => {
     );
 };
 
-// Define PropTypes for the component
 Statistics.propTypes = {
     sectors: PropTypes.number.isRequired,
     countries: PropTypes.number.isRequired,

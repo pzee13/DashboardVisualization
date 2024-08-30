@@ -155,8 +155,8 @@ const BarChart = ({ data }) => {
                 d3.select(this)
                     .transition()
                     .duration(200)
-                    .attr("fill-opacity", 0.7)  // Reset opacity on mouse out
-                    .attr("transform", "scale(1)");  // Reset scale
+                    .attr("fill-opacity", 0.7)  
+                    .attr("transform", "scale(1)");  
 
                 tooltip.transition().duration(200).style('opacity', 0);
             });

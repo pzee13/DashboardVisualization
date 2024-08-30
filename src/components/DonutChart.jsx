@@ -11,7 +11,7 @@ const DonutChart = ({ data }) => {
             return;
         }
 
-        // Compute average impact by region
+   
         const impactData = d3.rollups(
             data,
             v => d3.mean(v, d => d.impact || 0),
@@ -24,7 +24,7 @@ const DonutChart = ({ data }) => {
         const width = 400;
         const height = 400;
         const radius = Math.min(width, height) / 2;
-        const innerRadius = radius / 2; // Adjust the hole size
+        const innerRadius = radius / 2; 
 
         const color = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -76,7 +76,7 @@ const DonutChart = ({ data }) => {
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .attr("fill", "#fff")
-            .style("font-size", "12px") // Adjust text size if needed
+            .style("font-size", "12px") 
             .text(d => d.data.region)
             .style("opacity", 0.7);
 
