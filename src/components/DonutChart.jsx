@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 
-const IntensityPieChart = ({ data }) => {
+const DonutChart = ({ data }) => {
     const svgRef = useRef();
 
     useEffect(() => {
@@ -11,34 +11,38 @@ const IntensityPieChart = ({ data }) => {
             return;
         }
 
-        const intensityData = d3.rollups(
+        // Compute average impact by region
+        const impactData = d3.rollups(
             data,
-            v => d3.mean(v, d => d.intensity || 0),
-            d => d.pestle || 'Unknown'
-        ).map(([pestle, avgIntensity]) => ({ pestle, avgIntensity }));
+            v => d3.mean(v, d => d.impact || 0),
+            d => d.region || 'Unknown'
+        ).map(([region, avgImpact]) => ({ region, avgImpact })).filter(d => d.avgImpact > 0);
 
         const svg = d3.select(svgRef.current);
         svg.selectAll("*").remove();
 
-        const width = 440;
+        const width = 400;
         const height = 400;
         const radius = Math.min(width, height) / 2;
+        const innerRadius = radius / 2; // Adjust the hole size
 
         const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-        const pie = d3.pie().value(d => d.avgIntensity);
-        const arc = d3.arc().outerRadius(radius - 10).innerRadius(0);
+        const pie = d3.pie().value(d => d.avgImpact);
+        const arc = d3.arc()
+            .outerRadius(radius - 10)
+            .innerRadius(innerRadius);
 
         const arcs = svg.append("g")
             .attr("transform", `translate(${width / 2},${height / 2})`)
             .selectAll(".arc")
-            .data(pie(intensityData))
+            .data(pie(impactData))
             .enter().append("g")
             .attr("class", "arc");
 
         arcs.append("path")
             .attr("d", arc)
-            .attr("fill", d => color(d.data.pestle))
+            .attr("fill", d => color(d.data.region))
             .attr("stroke", "#fff")
             .attr("stroke-width", 1)
             .style("opacity", 0.8)
@@ -50,7 +54,7 @@ const IntensityPieChart = ({ data }) => {
                     .style("transform", "scale(1.1)");
 
                 tooltip.transition().duration(200).style("opacity", .9);
-                tooltip.html(`Average Intensity: ${d.data.avgIntensity.toFixed(2)}`)
+                tooltip.html(`Average Impact: ${d.data.avgImpact.toFixed(2)}`)
                     .style("left", `${event.pageX + 5}px`)
                     .style("top", `${event.pageY - 28}px`);
             })
@@ -72,8 +76,8 @@ const IntensityPieChart = ({ data }) => {
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .attr("fill", "#fff")
-            .style("font-size", "12px")
-            .text(d => d.data.pestle)
+            .style("font-size", "12px") // Adjust text size if needed
+            .text(d => d.data.region)
             .style("opacity", 0.7);
 
         // Tooltip setup
@@ -93,15 +97,15 @@ const IntensityPieChart = ({ data }) => {
     }, [data]);
 
     return (
-        <svg ref={svgRef} width="450" height="450"></svg>
+        <svg ref={svgRef} width="400" height="400"></svg>
     );
 };
 
-IntensityPieChart.propTypes = {
+DonutChart.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
-        intensity: PropTypes.number,
-        pestle: PropTypes.string
+        impact: PropTypes.number,
+        region: PropTypes.string
     })).isRequired
 };
 
-export default IntensityPieChart;
+export default DonutChart;

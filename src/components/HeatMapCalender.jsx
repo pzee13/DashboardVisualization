@@ -1,26 +1,24 @@
 import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-
-
-
+import './HeatMapCalender.css';
 
 const HeatmapCalendar = ({ data }) => {
     const transformData = (data) => {
         return data.map(doc => {
-            const date = new Date(doc.published);
-            const day = date.getDay(); // Sunday = 0, Monday = 1, etc.
-            const week = Math.floor(date.getDate() / 7); // 0-based week index
-            
+            const date = new Date(doc.published); 
+            const day = date.getDay(); 
+            const week = Math.floor(date.getDate() / 7); 
+
             return {
-                date: doc.published,
+                date: doc.published, 
                 day,
                 week,
-                value: doc.intensity || 0 // Use intensity or any other metric
+                value: doc.intensity || 0 
             };
         });
     };
-    
+
     const svgRef = useRef();
 
     useEffect(() => {
@@ -34,7 +32,7 @@ const HeatmapCalendar = ({ data }) => {
         const weeksInMonth = 5;
 
         const colorScale = d3.scaleSequential(d3.interpolateBlues)
-            .domain([0, d3.max(data, d => d.value)]);
+            .domain([0, d3.max(data, d => d.intensity)]);
 
         const x = d3.scaleBand()
             .range([0, width])
@@ -48,7 +46,7 @@ const HeatmapCalendar = ({ data }) => {
             .attr("height", height);
 
         svg.selectAll(".cell")
-            .data(data)
+            .data(transformData(data)) // Use transformed data
             .enter().append("rect")
             .attr("class", "cell")
             .attr("x", d => x(d.day))
@@ -68,7 +66,7 @@ const HeatmapCalendar = ({ data }) => {
                     .style("color", "#fff")
                     .style("padding", "5px")
                     .style("border-radius", "4px")
-                    .html(`Date: ${d.date}<br>Value: ${d.value}`)
+                    .html(`Date: ${d.date}<br>Intensity: ${d.value}`)
                     .style("left", `${event.pageX + 5}px`)
                     .style("top", `${event.pageY - 28}px`);
             })
@@ -105,11 +103,9 @@ const HeatmapCalendar = ({ data }) => {
 
 HeatmapCalendar.propTypes = {
     data: PropTypes.arrayOf(PropTypes.shape({
-        date: PropTypes.string,
-        day: PropTypes.number,
-        week: PropTypes.number,
-        value: PropTypes.number
-    }))
+        published: PropTypes.string.isRequired,  // Corrected to 'published'
+        intensity: PropTypes.number.isRequired   // Corrected to 'intensity'
+    })).isRequired // Ensure 'data' is an array of required objects
 };
 
 export default HeatmapCalendar;
